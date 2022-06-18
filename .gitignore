@@ -1,0 +1,5 @@
+/camunda-springboot/target/
+/camunda-springboot/.idea/
+/restApi/.idea/
+/restApi/target/
+/.idea/

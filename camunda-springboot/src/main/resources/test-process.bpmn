@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0">
+  <bpmn:process id="messageEvent" isExecutable="true">
+    <bpmn:serviceTask id="HadoopApiCall" name="upload to hadoop&#10;" camunda:delegateExpression="#{hadoopApiCall}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_0m0fisu" />
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0we474c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0871y56</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1e47dhh">
+      <bpmn:incoming>Flow_060v99u</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_060v99u" sourceRef="KafkaApiCall" targetRef="Event_1e47dhh" />
+    <bpmn:serviceTask id="KafkaApiCall" name="send to Kafka" camunda:delegateExpression="#{kafkaApiCall}">
+      <bpmn:incoming>Flow_0871y56</bpmn:incoming>
+      <bpmn:outgoing>Flow_060v99u</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1ui93c9" sourceRef="testId" targetRef="AwsApiCall" />
+    <bpmn:sequenceFlow id="Flow_0we474c" sourceRef="AwsApiCall" targetRef="HadoopApiCall" />
+    <bpmn:sequenceFlow id="Flow_0871y56" sourceRef="HadoopApiCall" targetRef="KafkaApiCall" />
+    <bpmn:serviceTask id="AwsApiCall" name="downloaf file" camunda:delegateExpression="#{awsApiCall}">
+      <bpmn:incoming>Flow_1ui93c9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0we474c</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="testId">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="varible1" type="long" />
+          <camunda:formField id="varible2" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1ui93c9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1heqiht" messageRef="Message_07nwo3n" />
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0avxk5t" name="post1" />
+  <bpmn:message id="Message_07nwo3n" name="messageEvent" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="messageEvent">
+      <bpmndi:BPMNEdge id="Flow_060v99u_di" bpmnElement="Flow_060v99u">
+        <di:waypoint x="640" y="110" />
+        <di:waypoint x="682" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ui93c9_di" bpmnElement="Flow_1ui93c9">
+        <di:waypoint x="198" y="110" />
+        <di:waypoint x="250" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0we474c_di" bpmnElement="Flow_0we474c">
+        <di:waypoint x="350" y="110" />
+        <di:waypoint x="390" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0871y56_di" bpmnElement="Flow_0871y56">
+        <di:waypoint x="490" y="110" />
+        <di:waypoint x="540" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1pa38x8_di" bpmnElement="AwsApiCall">
+        <dc:Bounds x="250" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0x9u0fh_di" bpmnElement="testId">
+        <dc:Bounds x="162" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_060dlu9_di" bpmnElement="HadoopApiCall">
+        <dc:Bounds x="390" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0j1d0d6_di" bpmnElement="KafkaApiCall">
+        <dc:Bounds x="540" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1e47dhh_di" bpmnElement="Event_1e47dhh">
+        <dc:Bounds x="682" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
